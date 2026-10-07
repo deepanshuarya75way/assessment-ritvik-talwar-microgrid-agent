@@ -200,3 +200,34 @@ def reset_state(options: Optional[ResetOptions] = None):
             return {"error": f"Unknown scenario '{options.scenario}'. Valid options: {list(config.WEATHER_SCENARIOS.keys())}"}
         current_scenario = options.scenario
     return {"status": "reset", "scenario": current_scenario}
+    class ApprovalRequest(BaseModel):
+        approval: str
+        modifications: Optional[Dict] = None
+        reviewer_notes: Optional[str] = None
+        @app.post("/approve")
+        def approve_decision(request: ApprovalRequest):
+            global current_state
+
+            if not current_state.get("approval_pending"):
+                return {"error": "No pending approval"}
+                if request.approval not in ["approved", "rejected"]:
+                    return {"error": "approval must be 'approved' or 'rejected'"}
+
+                    cuurent_state["approval_decision"] = request.approval
+                    current_state["approval_modifications"] = request.modifications or {}
+                    current_state["reviewer_notes"] = request.reviewer_notes or ""
+                    current_state["approval_pending"] = False
+
+                    request.modifications
+                    current_state["decision"].update(request.modifications)
+
+                    if cycle_history:
+                        cycle_history[-1]["approval_decision"] = request.approval
+                        cycle_history[-1]["reviewer_notes"] = request.reviewer_notes or ""
+
+                        return{
+                            "status": "success",
+                            "approval_decision": request.approval,
+                            "message": "Approval decision recorded"
+                        }
+

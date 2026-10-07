@@ -17,3 +17,7 @@ class GridState(TypedDict):
     replanned: bool
     alerts: List[str]
     report: Dict
+    approval_pending: bool 
+    approval_data: Dict
+    approval_decission: Optional[str]
+    approval_notes: str
